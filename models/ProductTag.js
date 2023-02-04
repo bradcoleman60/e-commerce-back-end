@@ -2,6 +2,11 @@ const { Model, DataTypes } = require('sequelize');
 
 const sequelize = require('../config/connection');
 
+//Require other tables/models
+const Product = require('./Product');
+const Tag = require('./Tag');
+
+
 class ProductTag extends Model {}
 
 ProductTag.init(

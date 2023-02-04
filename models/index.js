@@ -21,27 +21,35 @@ Product.belongsTo(Category,{
 // Products belongToMany Tags (through ProductTag)
 
 Product.belongsToMany(Tag,{
-  through: 'ProductTag',
-  foreignKey: 'id'
+  through: 'product_tag'
 })
-
-// ProductTag.belongsTo(Product,{
-//   foreignKey: 'product_id'
-// })
-
 
 
 // Tags belongToMany Products (through ProductTag)
 
 Tag.belongsToMany(Product, { 
-  through: 'ProductTag',
-  foreignKey: 'prod_id'
+  through: 'product_tag'
 
 });
 
-// ProductTag.belongsTo(Tag, {
+/////////////////// THE FOLLOWING GETS MY PRODUCT TAGS ///////////////////
+
+// Product.hasMany(ProductTag, {
+//   foreignKey: 'product_id'
+// })
+
+// ProductTag.belongsTo(Product,{
 //   foreignKey: 'id'
 // })
+
+// ProductTag.hasMany(Tag,{
+//   foreignKey: 'id'
+// })
+
+// Tag.belongsTo(ProductTag,{
+//   foreignKey: 'tag_id'
+// })
+
 
 module.exports = {
   Product,
