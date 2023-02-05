@@ -1,42 +1,34 @@
-const router = require('express').Router();
-const { Product, Category, Tag, ProductTag } = require('../../models');
+const router = require("express").Router();
+const { Product, Category, Tag, ProductTag } = require("../../models");
 
 // The `/api/products` endpoint
 
 // get all products
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   // find all products
-  const allProductData = await  Product.findAll(
-    {
-      // include:[{model: Category}]
-      include:[{model: Category}, {model: Tag}]
-      
-    }
-  );
-  return res.json(allProductData)
-  // be sure to include its associated Category and Tag data
+  const allProductData = await Product.findAll({
+    /*To include the Category and Tag information - Note: Setting through:{attributes: to []} 
+    overrides sequelize default to include the fields of the join table, in this instance 
+    the Product_tag table.*/
+    include: [{ model: Category }, { model: Tag, through: { attributes: [] } }],
+  });
+  return res.json(allProductData);
 });
 
 // get one product
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   // find a single product by its `id`
   const specificProduct = await Product.findByPk(req.params.id, {
-    include:[{model: Category}, {model: Tag}]
-  })
-  return res.json(specificProduct)
-  // be sure to include its associated Category and Tag data
+    /*To include the Category and Tag information - Note: Setting through:{attributes: to []} 
+    overrides sequelize default to include the fields of the join table, in this instance 
+    the Product_tag table.*/
+    include: [{ model: Category }, { model: Tag, through: { attributes: [] } }],
+  });
+  return res.json(specificProduct);
 });
 
 // create new product
-router.post('/', (req, res) => {
-  /* req.body should look like this...
-    {
-      product_name: "Basketball",
-      price: 200.00,
-      stock: 3,
-      tagIds: [1, 2, 3, 4]
-    }
-  */
+router.post("/", (req, res) => {
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
@@ -60,7 +52,7 @@ router.post('/', (req, res) => {
 });
 
 // update product
-router.put('/:id', (req, res) => {
+router.put("/:id", (req, res) => {
   // update product data
   Product.update(req.body, {
     where: {
@@ -101,16 +93,15 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete("/:id", (req, res) => {
   // delete one product by its `id` value
-  Product.destroy(
-    {
-    where: {id: req.params.id}
+  Product.destroy({
+    where: { id: req.params.id },
+  })
+    .then((deleteProduct) => {
+      res.json(deleteDelete);
     })
-    .then((deleteProduct) =>{
-      res.json(deleteDelete)
-    })
-    .catch((err) => res.json(err))
+    .catch((err) => res.json(err));
 });
 
 module.exports = router;
